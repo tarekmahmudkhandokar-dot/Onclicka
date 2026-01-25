@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PP Coin - Watch Ads & Earn</title>
+<meta 
+  name="viewport" 
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+<title>PP Coin - Claim</title>
 
 <!-- Telegram WebApp SDK -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -12,102 +15,86 @@
 <script src="https://js.onclckvd.com/in-stream-ad-admanager/tma.js"></script>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #0f172a;
-        color: #fff;
-        text-align: center;
-        padding: 20px;
-    }
-    img {
-        border-radius: 50%;
-        margin-bottom: 10px;
-    }
-    button {
-        padding: 14px 28px;
-        font-size: 16px;
-        background: #22c55e;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        margin-top: 15px;
-    }
-    button:disabled {
-        background: #64748b;
-        cursor: not-allowed;
-    }
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #0f172a;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    overflow: hidden; /* screen shake fix */
+}
+#app {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+button {
+    padding: 16px 40px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    background: #22c55e;
+    color: #000;
+    font-weight: bold;
+}
+button:disabled {
+    background: #64748b;
+}
 </style>
 </head>
 
 <body>
 
-<div id="user-info"></div>
-
-<button id="adBtn" disabled>Loading Ad...</button>
+<div id="app">
+    <h2>PP Coin</h2>
+    <button id="claimBtn" disabled>Loading Ad...</button>
+</div>
 
 <script>
-/* ===============================
-   Telegram WebApp Init
-================================ */
+/* Telegram Init */
 Telegram.WebApp.ready();
-Telegram.WebApp.expand();
+// ❌ expand বাদ
+// Telegram.WebApp.expand();
 
-const user = Telegram.WebApp.initDataUnsafe?.user;
+const btn = document.getElementById("claimBtn");
+let showAdFn = null;
 
-if (user) {
-    const box = document.getElementById('user-info');
-
-    if (user.photo_url) {
-        const img = document.createElement('img');
-        img.src = user.photo_url;
-        img.width = 90;
-        box.appendChild(img);
-    }
-
-    const p = document.createElement('p');
-    p.innerText = `Hello, ${user.first_name}!`;
-    box.appendChild(p);
-}
-
-/* ===============================
-   OnClickA TMA Init
-================================ */
-const adBtn = document.getElementById('adBtn');
-
+/* Init OnClickA */
 window.initCdTma({
-    id: 417811 // ✅ YOUR REAL AD SPOT ID
+    id: 417811
 })
 .then(show => {
-    window.showAd = show;
-    adBtn.disabled = false;
-    adBtn.innerText = "▶ Watch Ad & Earn";
-    console.log("✅ TMA Ad Ready");
+    showAdFn = show;
+    btn.disabled = false;
+    btn.innerText = "Claim & Watch Ad";
+    console.log("OnClickA Ready");
 })
 .catch(err => {
-    console.error("❌ TMA Init Error:", err);
-    adBtn.innerText = "Ad Not Available";
+    console.log("Init failed", err);
+    btn.innerText = "Ad Not Available";
 });
 
-/* ===============================
-   Show Ad on Click
-================================ */
-adBtn.addEventListener("click", () => {
-    if (!window.showAd) return;
+/* Button Click */
+btn.onclick = () => {
+    if (!showAdFn) {
+        alert("Ad not ready");
+        return;
+    }
 
-    window.showAd()
+    showAdFn()
     .then(() => {
-        console.log("✅ Ad watched successfully");
-
-        // 👉 এখানে backend / API call করবে reward দেওয়ার জন্য
-        alert("🎉 Ad Completed! Reward added.");
-
+        alert("✅ Ad Completed");
+        // reward logic here
     })
-    .catch(err => {
-        console.error("❌ Ad Error:", err);
-        alert("Ad failed or skipped. Try again later.");
+    .catch(e => {
+        console.log("Ad failed", e);
+        alert("❌ No Ad / Blocked");
     });
-});
+};
 </script>
 
 </body>
