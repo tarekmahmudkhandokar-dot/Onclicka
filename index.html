@@ -8,7 +8,7 @@
 <!-- Telegram WebApp SDK -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-<!-- OnClicka TMA SDK -->
+<!-- OnClickA TMA SDK -->
 <script src="https://js.onclckvd.com/in-stream-ad-admanager/tma.js"></script>
 
 <style>
@@ -24,13 +24,14 @@
         margin-bottom: 10px;
     }
     button {
-        padding: 12px 25px;
+        padding: 14px 28px;
         font-size: 16px;
         background: #22c55e;
         color: white;
         border: none;
-        border-radius: 8px;
+        border-radius: 10px;
         cursor: pointer;
+        margin-top: 15px;
     }
     button:disabled {
         background: #64748b;
@@ -50,6 +51,8 @@
    Telegram WebApp Init
 ================================ */
 Telegram.WebApp.ready();
+Telegram.WebApp.expand();
+
 const user = Telegram.WebApp.initDataUnsafe?.user;
 
 if (user) {
@@ -68,39 +71,43 @@ if (user) {
 }
 
 /* ===============================
-   OnClicka TMA Init
+   OnClickA TMA Init
 ================================ */
 const adBtn = document.getElementById('adBtn');
 
 window.initCdTma({
-    id: 417811   // ✅ YOUR AD SPOT ID
-}).then(show => {
+    id: 417811 // ✅ YOUR REAL AD SPOT ID
+})
+.then(show => {
     window.showAd = show;
     adBtn.disabled = false;
-    adBtn.innerText = "Watch Ad & Earn";
-    console.log("TMA Ad Ready");
-}).catch(err => {
-    console.error("TMA Init Error:", err);
+    adBtn.innerText = "▶ Watch Ad & Earn";
+    console.log("✅ TMA Ad Ready");
+})
+.catch(err => {
+    console.error("❌ TMA Init Error:", err);
     adBtn.innerText = "Ad Not Available";
 });
 
 /* ===============================
-   Show Ad
+   Show Ad on Click
 ================================ */
-adBtn.onclick = () => {
+adBtn.addEventListener("click", () => {
     if (!window.showAd) return;
 
     window.showAd()
-        .then(() => {
-            console.log("Ad watched successfully");
-            alert("✅ Ad Completed! Reward added.");
-            // 👉 এখানে তুমি reward API call করবে
-        })
-        .catch(err => {
-            console.error("Ad Error:", err);
-            alert("❌ Ad failed. Try again later.");
-        });
-};
+    .then(() => {
+        console.log("✅ Ad watched successfully");
+
+        // 👉 এখানে backend / API call করবে reward দেওয়ার জন্য
+        alert("🎉 Ad Completed! Reward added.");
+
+    })
+    .catch(err => {
+        console.error("❌ Ad Error:", err);
+        alert("Ad failed or skipped. Try again later.");
+    });
+});
 </script>
 
 </body>
