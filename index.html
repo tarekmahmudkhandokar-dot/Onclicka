@@ -14,8 +14,9 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: #0f0f0f;
+      background: linear-gradient(135deg, #0f0f0f, #1a1a2e);
       color: white;
+      min-height: 100vh;
     }
 
     #loading-screen, #join-modal {
@@ -23,23 +24,23 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      background: #121212;
-      color: white;
+      background: rgba(18, 18, 18, 0.98);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 1000;
+      transition: opacity 0.4s ease;
     }
 
     .loader {
-      border: 5px solid #333;
-      border-top: 5px solid #3498db;
+      border: 6px solid #2a2a2a;
+      border-top: 6px solid #00aaff;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1.2s linear infinite;
-      margin-bottom: 20px;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 24px;
     }
 
     @keyframes spin {
@@ -49,84 +50,111 @@
 
     .modal-content {
       text-align: center;
-      padding: 30px 20px;
+      padding: 32px 24px;
       max-width: 90%;
+      background: rgba(30, 30, 50, 0.6);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 170, 255, 0.15);
+      backdrop-filter: blur(10px);
     }
 
-    h2 {
+    h2, h3 {
       margin-bottom: 16px;
-      font-size: 1.6rem;
+      font-size: 1.8rem;
+      color: #00d4ff;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
     }
 
     p {
       margin-bottom: 24px;
       font-size: 1.1rem;
       opacity: 0.9;
+      line-height: 1.5;
     }
 
-    .btn-join, .btn-verify {
+    .btn {
       display: inline-block;
-      padding: 14px 32px;
+      padding: 14px 40px;
       font-size: 1.1rem;
       font-weight: 600;
-      border-radius: 12px;
+      border-radius: 50px;
       cursor: pointer;
       text-decoration: none;
       margin: 12px 8px;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
+      border: none;
     }
 
     .btn-join {
-      background: #0088cc;
+      background: linear-gradient(45deg, #00aaff, #0077cc);
       color: white;
     }
 
     .btn-join:hover {
-      background: #006b9e;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 170, 255, 0.4);
     }
 
     .btn-verify {
-      background: #2ecc71;
+      background: linear-gradient(45deg, #2ecc71, #27ae60);
       color: white;
-      border: none;
     }
 
     .btn-verify:hover {
-      background: #27ae60;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
     }
 
     #main-app {
-      padding: 40px 20px;
+      padding: 50px 20px;
       text-align: center;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     #main-app h1 {
-      font-size: 2.2rem;
-      margin-bottom: 20px;
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      color: #00d4ff;
+    }
+
+    #main-app p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
     }
   </style>
 </head>
 <body>
 
   <!-- Loading Screen -->
-  <div id="loading-screen" style="display: flex; /* বাকি স্টাইল */">
-    <p>Verifying...</p>
-</div>
-
-<div id="join-modal" style="display: none; /* বাকি স্টাইল */">
-    <h3>Join @PPCoinChannel to Continue</h3>
-    <a href="https://t.me/PPCoinChannel">Join Now</a>
-    <button onclick="checkUserStatus()">I Have Joined</button>
-</div>
-
-<div id="main-app" style="display: none;">
-</div>
-    <h1>Welcome to PP Coin App</h1>
-    <p>আপনি সফলভাবে ভেরিফাইড হয়েছেন 🎉</p>
-    <!-- এখানে আপনার মূল অ্যাপের কন্টেন্ট যোগ করবেন -->
+  <div id="loading-screen">
+    <div class="loader"></div>
+    <p>Verifying your access...</p>
   </div>
 
-  <!-- Firebase (compat version – আপনার প্রজেক্টের সাথে মিলিয়ে নিন) -->
+  <!-- Join Modal (আকর্ষণীয় ব্যানার স্টাইল) -->
+  <div id="join-modal" style="display: none;">
+    <div class="modal-content">
+      <h2>PP Coin</h2>
+      <h3>Unlock Full Access Now!</h3>
+      <p>Join our exclusive channel to discover all features, rewards, and updates in PP Coin App.</p>
+      <a href="https://t.me/PPCoinChannel" target="_blank" class="btn btn-join">Join Channel</a>
+      <button class="btn btn-verify" onclick="checkUserStatus()">I Have Joined – Verify</button>
+    </div>
+  </div>
+
+  <!-- Main App Content -->
+  <div id="main-app" style="display: none;">
+    <h1>Welcome to PP Coin App 🎉</h1>
+    <p>আপনি সফলভাবে ভেরিফাইড হয়েছেন! এখন সম্পূর্ণ অ্যাপ উপভোগ করুন।</p>
+    <!-- এখানে আপনার মূল অ্যাপের কন্টেন্ট যোগ করুন (ব্যালেন্স, বাটন, গেম ইত্যাদি) -->
+  </div>
+
+  <!-- Firebase Compat (যদি 1st gen functions ব্যবহার করেন) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
 
@@ -135,7 +163,7 @@
 
   <script>
     // =============================================
-    //          Firebase Config – এখানে পরিবর্তন করুন
+    //          Firebase Config – আপনার প্রজেক্টের তথ্য দিন
     // =============================================
     const firebaseConfig = {
       apiKey: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
@@ -144,7 +172,6 @@
       storageBucket: "your-project-id.appspot.com",
       messagingSenderId: "123456789012",
       appId: "1:123456789012:web:xxxxxxxxxxxxxxxxxxxxxx"
-      // measurementId: "G-XXXXXXXXXX"  // optional
     };
 
     // Initialize Firebase
@@ -153,50 +180,67 @@
 
     // Telegram Web App
     const tg = window.Telegram.WebApp;
-    tg.expand();           // full screen
+    tg.expand();  // ফুল স্ক্রিন
     tg.ready();
 
-    async function checkUserStatus() {
-      const loadingScreen = document.getElementById('loading-screen');
-      const joinModal     = document.getElementById('join-modal');
-      const mainApp       = document.getElementById('main-app');
+    const CHANNEL_LINK = "https://t.me/PPCoinChannel";
 
-      loadingScreen.style.display = 'flex';
+    async function checkUserStatus() {
+      const loading = document.getElementById('loading-screen');
+      const joinModal = document.getElementById('join-modal');
+      const mainApp = document.getElementById('main-app');
+
+      loading.style.display = 'flex';
       joinModal.style.display = 'none';
 
-      const user = tg.initDataUnsafe.user;
+      const user = tg.initDataUnsafe?.user;
       const userId = user?.id;
 
       if (!userId) {
-        alert("Please open this app from Telegram.");
-        loadingScreen.style.display = 'none';
+        alert("অ্যাপটি Telegram থেকে ওপেন করুন।");
+        loading.style.display = 'none';
         return;
       }
 
       try {
-        // Cloud Function call
+        // Cloud Function কল (আপনার Firebase-এ checkMembership নামে ফাংশন থাকতে হবে)
         const checkMembership = functions.httpsCallable('checkMembership');
         const result = await checkMembership({ userId: String(userId) });
 
         if (result.data?.joined === true) {
-          loadingScreen.style.display = 'none';
+          loading.style.display = 'none';
           mainApp.style.display = 'block';
+          tg.MainButton.setText("Continue").show(); // অপশনাল: Telegram Main Button
         } else {
-          loadingScreen.style.display = 'none';
+          loading.style.display = 'none';
           joinModal.style.display = 'flex';
         }
       } catch (error) {
-        console.error("Membership check failed:", error);
-        alert("Verification failed. Please try again.");
-        loadingScreen.style.display = 'none';
+        console.error("Error:", error);
+        alert("ভেরিফিকেশন সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+        loading.style.display = 'none';
         joinModal.style.display = 'flex';
       }
     }
 
-    // Page load হলেই চেক শুরু
+    // অটো polling (প্রতি ৫ সেকেন্ডে চেক – join modal ওপেন থাকলে)
+    let pollingInterval;
+    function startPolling() {
+      pollingInterval = setInterval(() => {
+        if (document.getElementById('join-modal').style.display === 'flex') {
+          checkUserStatus();
+        }
+      }, 5000);
+    }
+
+    // পেজ লোড হলেই শুরু
     window.addEventListener('load', () => {
       checkUserStatus();
+      startPolling();  // অটো ভেরিফাই চালু
     });
+
+    // অপশনাল: Telegram-এর Back বাটন হ্যান্ডেল (যদি দরকার হয়)
+    tg.BackButton.onClick(() => tg.close());
   </script>
 
 </body>
