@@ -109,24 +109,18 @@
 <body>
 
   <!-- Loading Screen -->
-  <div id="loading-screen">
-    <div class="loader"></div>
-    <p>Verifying Membership...</p>
-  </div>
+  <div id="loading-screen" style="display: flex; /* বাকি স্টাইল */">
+    <p>Verifying...</p>
+</div>
 
-  <!-- Join Modal -->
-  <div id="join-modal" style="display: none;">
-    <div class="modal-content">
-      <h2>Join Our Channel</h2>
-      <p>অ্যাপটি ব্যবহার করতে হলে আপনাকে <strong>@PPCoinChannel</strong>-এ জয়েন করতে হবে।</p>
-      
-      <a href="https://t.me/PPCoinChannel" target="_blank" class="btn-join">Join Now</a>
-      <button onclick="checkUserStatus()" class="btn-verify">I Have Joined</button>
-    </div>
-  </div>
+<div id="join-modal" style="display: none; /* বাকি স্টাইল */">
+    <h3>Join @PPCoinChannel to Continue</h3>
+    <a href="https://t.me/PPCoinChannel">Join Now</a>
+    <button onclick="checkUserStatus()">I Have Joined</button>
+</div>
 
-  <!-- Main App Content -->
-  <div id="main-app" style="display: none;">
+<div id="main-app" style="display: none;">
+</div>
     <h1>Welcome to PP Coin App</h1>
     <p>আপনি সফলভাবে ভেরিফাইড হয়েছেন 🎉</p>
     <!-- এখানে আপনার মূল অ্যাপের কন্টেন্ট যোগ করবেন -->
