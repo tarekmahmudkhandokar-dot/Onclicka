@@ -1,101 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta 
-  name="viewport" 
-  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
-<title>PP Coin - Claim</title>
-
-<!-- Telegram WebApp SDK -->
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-<!-- OnClickA TMA SDK -->
-<script src="https://js.onclckvd.com/in-stream-ad-admanager/tma.js"></script>
-
-<style>
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: #0f172a;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    overflow: hidden; /* screen shake fix */
-}
-#app {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 20px;
-}
-button {
-    padding: 16px 40px;
-    font-size: 18px;
-    border-radius: 10px;
-    border: none;
-    background: #22c55e;
-    color: #000;
-    font-weight: bold;
-}
-button:disabled {
-    background: #64748b;
-}
-</style>
-</head>
-
-<body>
-
-<div id="app">
-    <h2>PP Coin</h2>
-    <button id="claimBtn" disabled>Loading Ad...</button>
-</div>
-
-<script>
-/* Telegram Init */
-Telegram.WebApp.ready();
-// ❌ expand বাদ
-// Telegram.WebApp.expand();
-
-const btn = document.getElementById("claimBtn");
-let showAdFn = null;
-
-/* Init OnClickA */
-window.initCdTma({
-    id: 417811
-})
-.then(show => {
-    showAdFn = show;
-    btn.disabled = false;
-    btn.innerText = "Claim & Watch Ad";
-    console.log("OnClickA Ready");
-})
-.catch(err => {
-    console.log("Init failed", err);
-    btn.innerText = "Ad Not Available";
-});
-
-/* Button Click */
-btn.onclick = () => {
-    if (!showAdFn) {
-        alert("Ad not ready");
-        return;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PP Coin App</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    showAdFn()
-    .then(() => {
-        alert("✅ Ad Completed");
-        // reward logic here
-    })
-    .catch(e => {
-        console.log("Ad failed", e);
-        alert("❌ No Ad / Blocked");
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #0f0f0f;
+      color: white;
+    }
+
+    #loading-screen, #join-modal {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: #121212;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .loader {
+      border: 5px solid #333;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1.2s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .modal-content {
+      text-align: center;
+      padding: 30px 20px;
+      max-width: 90%;
+    }
+
+    h2 {
+      margin-bottom: 16px;
+      font-size: 1.6rem;
+    }
+
+    p {
+      margin-bottom: 24px;
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .btn-join, .btn-verify {
+      display: inline-block;
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      margin: 12px 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-join {
+      background: #0088cc;
+      color: white;
+    }
+
+    .btn-join:hover {
+      background: #006b9e;
+    }
+
+    .btn-verify {
+      background: #2ecc71;
+      color: white;
+      border: none;
+    }
+
+    .btn-verify:hover {
+      background: #27ae60;
+    }
+
+    #main-app {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    #main-app h1 {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loader"></div>
+    <p>Verifying Membership...</p>
+  </div>
+
+  <!-- Join Modal -->
+  <div id="join-modal" style="display: none;">
+    <div class="modal-content">
+      <h2>Join Our Channel</h2>
+      <p>অ্যাপটি ব্যবহার করতে হলে আপনাকে <strong>@PPCoinChannel</strong>-এ জয়েন করতে হবে।</p>
+      
+      <a href="https://t.me/PPCoinChannel" target="_blank" class="btn-join">Join Now</a>
+      <button onclick="checkUserStatus()" class="btn-verify">I Have Joined</button>
+    </div>
+  </div>
+
+  <!-- Main App Content -->
+  <div id="main-app" style="display: none;">
+    <h1>Welcome to PP Coin App</h1>
+    <p>আপনি সফলভাবে ভেরিফাইড হয়েছেন 🎉</p>
+    <!-- এখানে আপনার মূল অ্যাপের কন্টেন্ট যোগ করবেন -->
+  </div>
+
+  <!-- Firebase (compat version – আপনার প্রজেক্টের সাথে মিলিয়ে নিন) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
+
+  <!-- Telegram Web App SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <script>
+    // =============================================
+    //          Firebase Config – এখানে পরিবর্তন করুন
+    // =============================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      authDomain: "your-project-id.firebaseapp.com",
+      projectId: "your-project-id",
+      storageBucket: "your-project-id.appspot.com",
+      messagingSenderId: "123456789012",
+      appId: "1:123456789012:web:xxxxxxxxxxxxxxxxxxxxxx"
+      // measurementId: "G-XXXXXXXXXX"  // optional
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const functions = firebase.functions();
+
+    // Telegram Web App
+    const tg = window.Telegram.WebApp;
+    tg.expand();           // full screen
+    tg.ready();
+
+    async function checkUserStatus() {
+      const loadingScreen = document.getElementById('loading-screen');
+      const joinModal     = document.getElementById('join-modal');
+      const mainApp       = document.getElementById('main-app');
+
+      loadingScreen.style.display = 'flex';
+      joinModal.style.display = 'none';
+
+      const user = tg.initDataUnsafe.user;
+      const userId = user?.id;
+
+      if (!userId) {
+        alert("Please open this app from Telegram.");
+        loadingScreen.style.display = 'none';
+        return;
+      }
+
+      try {
+        // Cloud Function call
+        const checkMembership = functions.httpsCallable('checkMembership');
+        const result = await checkMembership({ userId: String(userId) });
+
+        if (result.data?.joined === true) {
+          loadingScreen.style.display = 'none';
+          mainApp.style.display = 'block';
+        } else {
+          loadingScreen.style.display = 'none';
+          joinModal.style.display = 'flex';
+        }
+      } catch (error) {
+        console.error("Membership check failed:", error);
+        alert("Verification failed. Please try again.");
+        loadingScreen.style.display = 'none';
+        joinModal.style.display = 'flex';
+      }
+    }
+
+    // Page load হলেই চেক শুরু
+    window.addEventListener('load', () => {
+      checkUserStatus();
     });
-};
-</script>
+  </script>
 
 </body>
 </html>
